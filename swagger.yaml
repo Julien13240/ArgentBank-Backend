@@ -99,7 +99,27 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-
+  /account:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: Retrieve all accounts
+      description: API to fetch all user accounts
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Accounts retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Account"
+        "401":
+          description: Unauthorized access
+        "500":
+          description: Internal Server Error
   /transactions:
     get:
       security:
@@ -129,8 +149,7 @@ paths:
           description: Unauthorized access
         "500":
           description: Internal Server Error
-
-  /transactions/{transactionId}:
+  /transaction/{transactionId}:
     get:
       security:
         - Bearer: []
@@ -159,7 +178,6 @@ paths:
           description: Transaction not found
         "500":
           description: Internal Server Error
-
     put:
       security:
         - Bearer: []
@@ -195,35 +213,6 @@ paths:
         "500":
           description: Internal Server Error
 
-    delete:
-      security:
-        - Bearer: []
-      tags:
-        - Transactions Module
-      summary: Delete transaction details
-      description: Remove additional details from a transaction (not the transaction itself)
-      parameters:
-        - in: path
-          name: transactionId
-          required: true
-          type: string
-          description: ID of the transaction
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: Transaction details removed successfully
-          schema:
-            $ref: "#/definitions/ApiResponse"
-        "400":
-          description: Invalid transaction ID
-        "401":
-          description: Unauthorized access
-        "404":
-          description: Transaction not found
-        "500":
-          description: Internal Server Error
-
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -231,6 +220,22 @@ securityDefinitions:
     in: header
 
 definitions:
+  Account:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique identifier of the account
+      title:
+        type: string
+        description: Title of the account
+      amount:
+        type: number
+        format: float
+        description: Current account balance
+      description:
+        type: string
+        description: description  of the account
   User:
     properties:
       email:
@@ -278,7 +283,7 @@ definitions:
   Transaction:
     type: object
     properties:
-      id:
+      transactionId:
         type: string
         description: Transaction ID
       accountId:
